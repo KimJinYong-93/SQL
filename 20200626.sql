@@ -16,6 +16,10 @@ SELECT *
 FROM emp
 WHERE ename LIKE 'S%';
 
+SELECT *
+FROM emp
+WHERE ename LIKE '____S';
+
 --member 테이블에서 회원의 성이 [신]씨인 사람의 mem_id, mem_name을 조회하는 쿼리를 작성하시오.
 
 SELECT mem_id, mem_name
@@ -90,6 +94,10 @@ WHERE mgr NOT IN(7698, 7839);
 SELECT *
 FROM emp
 WHERE mgr NOT IN(7698, 7839, NULL);
+
+SELECT *
+FROM emp
+WHERE mgr NOT IN(7698, 7839) AND mgr IS NOT NULL;
 
 --mgr가 (7698, 7839, NULL)에 포함된다.
 --mgr IN(7698, 7839, NULL); ==> mgr = 7698 OR mgr = 7839 OR mgr = NULL
@@ -192,7 +200,12 @@ WHERE (job = 'SALESMAN') OR ((hiredate > TO_DATE('1981/06/01', 'YYYY/MM/DD'))
 
 SELECT *
 FROM emp
+ORDER BY 컬럼 | 별칭 | 나열된 컬럼의 인덱스 번호 [ASC | DESC];
+
+SELECT *
+FROM emp
 ORDER BY ename;
+
 
 SELECT *
 FROM emp
@@ -235,7 +248,18 @@ WHERE comm > 0
 ORDER BY comm DESC, empno;
 
 
+
 --<과제>
 --[ORDERBY3,4]
+
+SELECT *
+FROM emp
+WHERE mgr > 0
+ORDER BY job ASC, empno DESC;
+
+SELECT *
+FROM emp
+WHERE deptno IN (10, 30) AND sal > 1500
+ORDER BY ename DESC;
 
 

@@ -91,7 +91,7 @@ WHERE ROWNUM BETWEEN 11 AND 20;
 
 --페이징 처리 쿼리 2page
 SELECT *
-FROM (SELECT ROWNUM rn, a.*
+FROM (SELECT ROWNUM rn, a.*        --rn 이라는 별칭을 통해 1page 부터가 아니더라도 조회가 가능해짐
       FROM (SELECT empno, ename
             FROM emp
             ORDER BY ename) a)
@@ -169,14 +169,14 @@ WHERE LOWER(ename) = 'smith';
 --TRUNC(숫자, 내림 기준자리) : 내림 함수
 --MOD(피제수, 제수) : 나머지 값을 구하는 함수
 
-SELECT ROUND(105.54, 1) round, -- 두번째 인자의 자리까지 반올림
+SELECT ROUND(105.54, 1) round,           -- 두번째 인자의 자리까지 반올림
        ROUND(105.55, 1) round2,
        ROUND(105.55, 0) round3,
-       ROUND(105.55) round4, --두번째 인자 빼면 0을 넣은 것과 같은 결과
-       ROUND(105.55, -1) round5 --값이 음수일때는 해당 자리
+       ROUND(105.55) round4,             --두번째 인자 빼면 0을 넣은 것과 같은 결과
+       ROUND(105.55, -1) round5          --값이 음수일때는 해당 자리
 FROM dual;
---  1  0  5  .  5  4 
--- -3 -2 -1  0  1  2   ==> 자릿수
+  1  0  5  .  5  4 
+ -3 -2 -1  0  1  2   ==> 자릿수
 
 SELECT TRUNC(105.54, 1) TRUNC, 
        TRUNC(105.55, 1) TRUNC,
@@ -228,6 +228,8 @@ FROM dual;
 --  TO_DATE(날짜 문자열, 날짜 문자열의 패턴);
 --데이트 ==> 문자열 (보여주고 싶은 형식을 지정할 때)
 --  TO_CHAR(데이트 값, 표현하고싶은 문자열 패턴)
+--  TO_DATE 를 더 많이 사용한다. (SYSDATE 리터럴을 사용하면 오류가 발생할 수 있음.) 
+--  ==> 날짜와 날짜를 비교해야 한다.
 
 --SYSDATE 현재 날짜를 년도4자리-월2자리-일2자리
 SELECT SYSDATE, TO_CHAR(SYSDATE, 'YYYY-MM-DD'),

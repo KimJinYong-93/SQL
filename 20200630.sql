@@ -22,7 +22,7 @@ SELECT ADD_MONTHS(SYSDATE, 5) aft5,
 FROM dual;
 
 --NEXT_DAY : 해당 날짜 이후에 등장하는 첫번째 주간요일의 날짜
-SELECT NEXT_DAY(SYSDATE, 7) --7은 토요일
+SELECT NEXT_DAY(SYSDATE, 7) 
 FROM dual;
 
 --LAST_DAY : 해당 일자가 속한 월의 마지막 일자를 반환
@@ -39,7 +39,9 @@ FROM dual;
 --  ==> YYYYMMDD
 --3. 2번의 결과를 날짜 타입으로 변경
 
-SELECT TO_DATE(CONCAT(TO_CHAR(SYSDATE, 'YYYYMM'), '01'), 'YYYYMMDD')
+SELECT TO_DATE(CONCAT(TO_CHAR(SYSDATE, 'YYYYMM'), '01'), 'YYYYMMDD') FIRST_DAY
+       --CONCAT(TO_CHAR(SYSDATE, 'YYYYMM'), '01')
+       --TO_CHAR(SYSDATE, 'YYYYMM')
 FROM dual;
 
 --실습3
@@ -72,12 +74,11 @@ WHERE empno = '7369';
 SELECT *
 FROM TABLE(dbms_xplan.display);
 
-Plan hash value: 3956160932
-
- --실행계획을 읽는 방법 : **** 
+--실행계획을 읽는 방법 : **** 
  --1. 위에서 아래로
  --2. 단 자식 노드가 있으면 자식 노드 부터 읽는다. (자식노드 : 들여쓰기가 된 노드)
- 
+
+Plan hash value: 3956160932
 --------------------------------------------------------------------------
 | Id  | Operation         | Name | Rows  | Bytes | Cost (%CPU)| Time     |
 --------------------------------------------------------------------------
@@ -159,6 +160,7 @@ Note
 -- 날짜 국가별로 형식이 다르다.
 --      한국 : yyyy-mm-dd
 --      미국 : mm-dd-yyyy
+
 -- 숫자
 --      한국 : 9,000,000.00
 --      독일 : 9.000.000,00
@@ -226,14 +228,14 @@ WHERE userid != 'brown';
 SELECT ROUND((6/28) * 100, 2) || '%'
 FROM dual;
 
-
+--   ==> 컬럼 하나로 표현된다.
 --SQL 조건문
-CASE --   ==> 컬럼 하나로 표현된다.
+CASE 
     WHEN 조건문(참 거짓을 판단할 수 있는 문장) THEN 반환값
     WHEN 조건문(참 거짓을 판단할 수 있는 문장) THEN 반환값2
     WHEN 조건문(참 거짓을 판단할 수 있는 문장) THEN 반환값3
     ELSE 모든 WHEN절을 만족시키지 못할 때 반환할 기본값
-END ==> 하나의 컬럼으로 취급
+END 
 
 emp테이블에 저장된 job 컬럼의 값을 기준으로 급여(sal)를 인상시키려고 한다. sal컬럼과 함께 
 인상된 sal 컬럼의 값을 비교 하고 싶은 상황
@@ -264,8 +266,8 @@ SELECT empno, ename,
 FROM emp;
 
 SELECT empno, job, sal,
-       DECODE(deptno, 10, 'ACCOUNTING'
-                      20, 'RESEARCH'
-                      30, 'SALES'
+       DECODE(deptno, 10, 'ACCOUNTING',
+                      20, 'RESEARCH',
+                      30, 'SALES',
                       40, 'OPERATIONS') dname
 FROM emp;
