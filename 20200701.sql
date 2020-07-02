@@ -6,11 +6,12 @@ DECODE : 조건에 따라 반환 값이 달라지는 함수
         이것과 다르게 DECODE 함수에서는 sal = 1000, sal = 2000
         
 DECODE는 가변인자(인자의 갯수가 정해지지 않음, 상황에 따라 늘어날 수도 있다)를 갖는 함수
-문법 : DECODE(기준값[col|expression], 
-              비교값1, 반환값1,
-              비교값2, 반환값2,
-              비교값3, 반환값3,
-              옵션[기준값이 비교값중에 일치하는 값이 없을 때 기본적으로 반활할 값]
+DECODE는 연산자가 제한된다. equals ( = ) 연산만 가능. CASE 절은 다른 연산자 사용 가능.
+문법 : DECODE(기준값[col|expression],
+                비교값1, 반환값1, 
+                비교값2, 반환값2, 
+                비교값3, 반환값3,...
+                옵션[기준값이 비교값중에 일치하는 값이 없을 때 기본적으로 반활할 값]
 ==> java
 if (기준값 == 비교값1)
     반환값1을 반환해준다
@@ -128,10 +129,7 @@ GROUP BY 행들을 묶을 기준1, 행들을 묶을 기준2, 행들을 묶을 �
 4. 부서번호별 급여 평균액수
 5. 부서번호별 급여가 존재하는 사람의 수(sal 컬럼이 null이 아닌 행의 수)
                                     * : 그 그룹의 행수
-SELECT deptno, SUM(sal), MAX(sal), MIN(sal), ROUND(AVG(sal), 2), 
-       COUNT(sal),
-       COUNT(comm),
-       COUNT(*)
+SELECT deptno, SUM(sal), MAX(sal), MIN(sal), ROUND(AVG(sal), 2)
 FROM emp
 GROUP BY deptno;
 
@@ -176,7 +174,7 @@ SELECT *
     FROM(SELECT deptno, SUM(sal) sum_sal
          FROM emp
          GROUP BY deptno)
-WHERE sum_sal > 9000; -- ==> IN-LINE VIEW 를 통해 해결할 수 있다
+WHERE sum_sal > 9000;                        -- ==> IN-LINE VIEW 를 통해 해결할 수 있다
 
 그룹함수 이해하기 힘들다 ==> 엑셀에 데이터를 그려보자
 
