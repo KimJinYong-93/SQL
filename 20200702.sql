@@ -14,7 +14,7 @@ GROUP BY deptno;
 
 2. GROUP BY 절에 작성된 컬럼 이외의 컬럼이 SELECT 절에 올 수 없다.
     ==> GROUP BY 절로 묶었는데 SELECT 로 다시 조회한다?? 논리적으로 맞지 않는다.
-    
+
 
 --실습 grp1
 직원중 가장 높은 급여
@@ -34,16 +34,16 @@ FROM emp
 GROUP BY deptno;
 
 --실습 grp3
-SELECT (CASE 
+SELECT CASE 
             WHEN deptno = 30 THEN 'SALES'
             WHEN deptno = 20 THEN 'RESEARCH'
             WHEN deptno = 10 THEN 'ACCOUNTING'
             ELSE 'DDIT'
-        END) DNAME,
+        END DNAME,
        MAX(sal), MIN(sal), ROUND(AVG(sal), 2), 
-       SUM(sal), COUNT(sal), COUNT(mgr), COUNT(ename)
+       SUM(sal), COUNT(sal), COUNT(mgr), COUNT(*)
 FROM emp
-GROUP BY deptno; -- 여기에 케이스 구문을 작성해도 된다.
+GROUP BY deptno;                                     -- 여기에 케이스 구문을 작성해도 된다.
 
 --실습 grp4
 --emp 테이블을 이용하여 직원의 입사 년월별로 몇명의 직원이 입사했는지 조회하는 쿼리를 작성하세요.
@@ -99,8 +99,8 @@ FROM 테이블1 NATURAL JOIN 테이블2
 
 emp, dept 두 테이블의 공통된 이름을 갖는 컬럼 : deptno 
 
-SELECT emp.empno, emp.ename, emp.deptno, dname
-FROM emp NATURAL JOIN dept; ==> JOIN 조건으로 사용한 컬럼은 테이블 한정자를 붙이면 에러(ANSI-SQL)
+SELECT empno, ename, deptno, dname
+FROM emp NATURAL JOIN dept;   ==> JOIN 조건으로 사용한 컬럼은 테이블 한정자를 붙이면 에러(ANSI-SQL)
 
 위의 쿼리를 ORACLE-SQL 버전으로 수정
 오라클에서는 조인 조건을 WHERE절에 기술
@@ -108,7 +108,11 @@ FROM emp NATURAL JOIN dept; ==> JOIN 조건으로 사용한 컬럼은 테이블 
 
 SELECT emp.*, dept.deptno, dname
 FROM emp, dept
-WHERE emp.deptno = dept.deptno; (!= 일때도 생각해보자)
+WHERE emp.deptno = dept.deptno;    (!= 일때도 생각해보자)
+
+SELECT a.*, a.deptno, dname
+FROM emp a, dept b
+WHERE a.deptno = b.deptno;
 
 ANSI-SQL : JOIN with USING
 조인 테이블간 동일한 이름의 컬럼이 복수개 인데 이름이 같은 컬럼중 일부로만 조인 하고 싶을 때 사용
@@ -144,7 +148,7 @@ FROM emp;
 
 KING의 경우 상사가 없기 때문에 조인에 실패한다
 총 행의 수는 13건이 조회된다
-SELECT e.empno, e.ename, e.mgr, m.ename
+SELECT e.empno, e.ename, e.mgr, m.ename mgr_name
 FROM emp e JOIN emp m ON (e.mgr = m.empno);
 
 사원중 사원의 번호가 7369~7698인 사원만 대상으로 해당 사원의 사원번호, 이름, 상사의 사원번호, 
@@ -165,7 +169,7 @@ SELECT a.*, emp.ename
 FROM(SELECT empno, ename, mgr
      FROM emp
      WHERE empno BETWEEN 7369 AND 7698) a JOIN emp ON (a.mgr = emp.empno);
-     
+
 
 NON-EQUI-JOIN : 조인 조건이 =이 아닌 조인
  != 값이 다를 때 연결
@@ -198,3 +202,21 @@ WHERE emp.deptno = dept.deptno
 과제 join0_2 ~ join0_4
     youtube 에서 노마드 코더 동영상 시청 - 누구나 코딩을 할 수 있다??
                                       - 자꾸만 에러가 나오는데 왜그런걸까요??
+                                      
+--실습 join0_2
+SELECT empno, ename, sal, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+  AND sal > 2500;
+  
+--실습 join0_3
+SELECT empno, ename, sal, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+  AND (sal > 2500 AND empno > 7600);
+
+--실습 join0_4
+SELECT empno, ename, sal, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+  AND (sal > 2500 AND empno > 7600 AND dname = 'RESEARCH');
