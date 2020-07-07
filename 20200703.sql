@@ -8,7 +8,6 @@ ansi SQL 두 테이블의 연결 컬럼명이 다르기 때문에 NATURAL JOIN, 
 SELECT lprod_gu, lprod_nm, prod_id, prod_name
 FROM prod JOIN lprod ON (prod.prod_lgu = lprod.lprod_gu);
 
-
 --실습 join2
 oracle SQL
 SELECT buyer_id, buyer_name, prod_id, prod_name
@@ -18,6 +17,7 @@ WHERE prod.prod_buyer = buyer.buyer_ID;
 ansi SQL
 SELECT buyer_id, buyer_name, prod_id, prod_name
 FROM buyer JOIN prod ON (prod.prod_buyer = buyer.buyer_ID);
+
 
 
 --실습 join3
@@ -66,6 +66,14 @@ FROM customer, cycle, product
 WHERE customer.cid = cycle.cid AND cycle.pid = product.pid
 GROUP BY customer.cid, customer.cnm, cycle.pid, pnm;
 
+SELECT *
+FROM cycle;
+
+SELECT customer.*, cycle.pid, pnm, SUM(cnt)
+FROM customer, cycle, product
+WHERE customer.cid = cycle.cid AND cycle.pid = product.pid
+GROUP BY customer.cid, customer.cnm, cycle.pid, pnm;
+
 
 --실습 join7
 SELECT product.pid, product.pnm, SUM(cnt)
@@ -82,29 +90,7 @@ GROUP BY cycle.pid, pnm;
 
 
 ansi SQL
-SELECT *
-FROM customer;
 
-SELECT *
-FROM cycle;
-
-SELECT *
-FROM product;
-
-SELECT *
-FROM cart;
-
-SELECT *
-FROM member;
-
-SELECT *
-FROM prod;
-
-SELECT *
-FROM buyer;
-
-SELECT *
-FROM lprod;
 
 
 조인 성공 여부로 데이터 조회를 결정하는 구분 방법
@@ -139,4 +125,40 @@ FROM emp e LEFT OUTER JOIN emp m ON (e.mgr = m.empno);
 과제 (join8 ~ 13)
 hr 계정에 있는 테이블 이용
 
+--실습 join8
+SELECT regions.region_id, region_name, country_name
+FROM countries, regions
+WHERE countries.region_id = regions.region_id AND region_name IN ('Europe');
 
+--실습 join9
+SELECT regions.region_id, region_name, country_name, city
+FROM countries, regions, locations
+WHERE countries.region_id = regions.region_id AND countries.country_id = locations.country_id
+  AND region_name IN ('Europe');
+
+--실습 join10
+SELECT regions.region_id, region_name, country_name, city, department_name
+FROM countries, regions, locations, departments
+WHERE countries.region_id = regions.region_id AND countries.country_id = locations.country_id
+  AND locations.location_id = departments.location_id
+  AND region_name IN ('Europe');
+
+--실습 join11
+SELECT regions.region_id, region_name, country_name, city, department_name, 
+       CONCAT(first_name, last_name) name
+FROM countries, regions, locations, departments, employees
+WHERE countries.region_id = regions.region_id AND countries.country_id = locations.country_id
+  AND locations.location_id = departments.location_id 
+  AND departments.department_id = employees.department_id
+  AND region_name IN ('Europe');
+
+--실습 join12
+SELECT employee_id, CONCAT(first_name, last_name) name, jobs.job_id, job_title
+FROM jobs, employees
+WHERE employees.job_id = jobs.job_id;
+
+--실습 join13
+SELECT m.employee_id mgr_id, CONCAT(m.first_name, m.last_name) mgr_name, e.employee_id, 
+                             CONCAT(e.first_name, e.last_name) name, jobs.job_id, job_title
+FROM jobs, employees e, employees m
+WHERE e.job_id = jobs.job_id AND m.employee_id = e.manager_id;
