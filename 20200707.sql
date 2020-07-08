@@ -100,7 +100,7 @@ SELECT e.empno, e.ename, e.deptno, d.dname, d.loc
 FROM emp e JOIN dept d ON (1=1);
 
 SELECT e.empno, e.ename, e.deptno, d.dname, d.loc
-FROM emp e, dept d; --WHERE 절에 조건을 기술하지 않으면 CROSS JOIN
+FROM emp e, dept d;  --WHERE 절에 조건을 기술하지 않으면 CROSS JOIN
 
 --실습 crossjoin1
 SELECT *
@@ -149,7 +149,7 @@ SMITH가 현재 상황에서 속한 부서는 20번인데
 2번에서 작성한 쿼리가 수정이 되야한다
 WHERE deptno = 20; ==> WHERE deptno = 30
 
-우리가 운하는 것은 고정된 부서번호로 사원 정보를 조회 하는 것이 아니라
+우리가 원하는 것은 고정된 부서번호로 사원 정보를 조회 하는 것이 아니라
 SMITH가 속한 부서를 통해 데이터를 조회 ==> SMITH가 속한 부서가 바뀌더라도
 쿼리를 수정하지 않도록 하는 것
 
@@ -179,9 +179,7 @@ SELECT empno, ename, (SELECT deptno, dname FROM dept WHERE deptno = 10)
 FROM emp;
 
 스칼라 서브쿼리가 단일행, 단일컬럼을 리턴하는 경우(o)
-SELECT empno, ename, 
-        (SELECT deptno FROM dept WHERE deptno = 10) deptno,
-        (SELECT dname FROM dept WHERE deptno = 10) dname
+SELECT empno, ename, (SELECT deptno FROM dept WHERE deptno = 10) deptno
 FROM emp;
 
 메인쿼리의 컬럼을 사용하는 스칼라 서브쿼리
@@ -223,3 +221,5 @@ SELECT *
 FROM emp
 WHERE sal > (SELECT ROUND(AVG(sal), 2)
              FROM emp);
+
+
