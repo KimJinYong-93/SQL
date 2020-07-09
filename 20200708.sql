@@ -23,7 +23,7 @@ WHERE sal > (SELECT AVG(sal)
              FROM emp e
              WHERE e.deptno = emp.deptno);
              --위의 문제와 서브쿼리가 메인쿼리의 테이블을 참조하는 건지 아닌지 차이 
-             
+
 전체사원의 정보를 조회, 조인 없이 해당 사원이 속한 부서의 부서이름 가져오기
 SELECT empno, ename, deptno, (SELECT dname FROM dept WHERE deptno = emp.deptno)
 FROM emp;
@@ -104,10 +104,13 @@ WHERE pid NOT IN (SELECT pid
                   FROM cycle
                   WHERE cid = 1);
 
---실습 sub6
+--실습 sub6 단일값 = 복수값
 SELECT *
 FROM cycle
 WHERE cid = 1 
   AND pid IN (SELECT pid
               FROM cycle
               WHERE cid = 2);
+              
+              
+              
