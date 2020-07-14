@@ -98,6 +98,8 @@ INSERT INTO dept_test VALUES (1, 'ddit', 'daejeon');
 
 dept_test 테이블의 deptno 컬럼을 참조하는 emp_test 테이블 생성
 
+DROP TABLE emp_test;
+
 CREATE TABLE emp_test (
     empno NUMBER(4),
     ename VARCHAR2(10),
