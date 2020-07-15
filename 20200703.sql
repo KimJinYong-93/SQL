@@ -19,6 +19,13 @@ SELECT buyer_id, buyer_name, prod_id, prod_name
 FROM buyer JOIN prod ON (prod.prod_buyer = buyer.buyer_ID);
 
 
+SELECT *
+FROM emp, dept;
+
+SELECT *
+FROM emp;
+
+DELETE 
 
 --실습 join3
 oracle SQL

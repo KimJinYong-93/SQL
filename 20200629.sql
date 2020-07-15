@@ -111,6 +111,10 @@ FROM (SELECT ROWNUM rn, a.*
 WHERE rn BETWEEN (:page-1) * :pageSize + 1 AND :page * :pageSize;
 --      ==> 바인드 값 입력
 
+
+
+
+
 --FUNCTION : 입력을 받아들여 특정 로직을 수행후 결과 값을 반환하는 객체
 --오라클에서의 함수 구분 : 입력되는 행의 수에 따라
 --1. Single row funtion

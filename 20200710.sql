@@ -4,6 +4,24 @@ FROM emp;
 DELETE dept
 WHERE deptno >= 90;
 
+DELETE emp
+WHERE empno = 9999;
+
+SELECT * 
+FROM emp;
+
+SELECT *
+FROM dept;
+
+DELETE dept
+WHERE dname = 'ddit';
+
+SELECT *
+FROM emp, dept
+WHERE emp.deptno != dept.deptno;
+
+ 
+
 COMMIT;
 
 emp 14, dept 4 ;
