@@ -347,5 +347,60 @@ PRIVATE [DEFAULT] : 해당 사용자만 사용할 수 있는 시노님
 삭제방법
 DROP SYNONYM 시노님이름;
 
+--------------------------------------------------------------------------------------------
+
 --과제 실습 idx4
+
+DROP INDEX idx_nu_emp_04;
+ALTER TABLE dept DROP CONSTRAINT pk_dept;
+
+
+SELECT *
+FROM emp
+WHERE empno = :empno;
+
+
+SELECT *
+FROM dept
+WHERE deptno = :deptno;
+
+
+SELECT *
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+  AND emp.deptno = :deptno
+  AND emp.empno LIKE :empno || '%'
+  
+  
+SELECT *
+FROM emp
+WHERE sal BETWEEN : st_sal AND :ed_sal
+  AND deptno = :deptno;
+  
+  
+SELECT *
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+  AND emp.deptno = :deptno
+  AND dept.loc = :loc;
+
+1. empno
+2. deptno
+3. deptno, empno
+4. deptno, sal
+5. deptno, loc
+
+CREATE INDEX idx_nu_emp_01 ON emp (empno);
+CREATE INDEX idx_nu_emp_01 ON emp (deptno);
+CREATE INDEX idx_nu_emp_01 ON emp (deptno, sal);
+CREATE INDEX idx_nu_emp_01 ON emp (deptno, loc);
+
+
+EXPLAIN PLAN FOR
+SELECT deptno, TO_CHAR(hiredate, 'yyyymm'), COUNT(*) cnt
+FROM emp
+GROUP BY deptno, TO_CHAR(hiredate, 'yyyymm');
+
+SELECT *
+FROM TABLE(dbms_xplan.display);
 
