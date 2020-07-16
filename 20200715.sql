@@ -376,8 +376,8 @@ SELECT *
 FROM emp
 WHERE sal BETWEEN : st_sal AND :ed_sal
   AND deptno = :deptno;
-  
-  
+
+ 
 SELECT *
 FROM emp, dept
 WHERE emp.deptno = dept.deptno
@@ -391,9 +391,9 @@ WHERE emp.deptno = dept.deptno
 5. deptno, loc
 
 CREATE INDEX idx_nu_emp_01 ON emp (empno);
-CREATE INDEX idx_nu_emp_01 ON emp (deptno);
-CREATE INDEX idx_nu_emp_01 ON emp (deptno, sal);
-CREATE INDEX idx_nu_emp_01 ON emp (deptno, loc);
+CREATE INDEX idx_nu_emp_02 ON emp (deptno);
+CREATE INDEX idx_nu_emp_03 ON emp (deptno, sal);
+CREATE INDEX idx_nu_emp_04 ON emp (deptno, loc);
 
 
 EXPLAIN PLAN FOR
@@ -401,6 +401,28 @@ SELECT deptno, TO_CHAR(hiredate, 'yyyymm'), COUNT(*) cnt
 FROM emp
 GROUP BY deptno, TO_CHAR(hiredate, 'yyyymm');
 
+SELECT COUNT(*)
+FROM dept
+WHERE deptno IN (10, 20, 30, 40);
+
 SELECT *
 FROM TABLE(dbms_xplan.display);
 
+1. emp : empno(=)(e.1)
+2. dept : deptno(=)(d.1)
+3. emp : deptno(=), empno(LIKE)
+   dept : empno(=)(d.1)
+4. emp : deptno(=), sal(BETWEEN)
+5. emp : deptno(=)
+   dept : deptno(=), [loc(=)](d.1)
+   
+   emp : empno(=)(e.1)
+   dept : loc(=)
+   
+emp 방향 : 1. empno
+           2. deptno, empno
+           2.2 deptno, empno, sal
+           3. deptno, sal
+           
+dept 방향 : 1. deptno, loc
+            2. loc
