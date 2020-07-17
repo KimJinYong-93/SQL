@@ -140,7 +140,7 @@ SELECT *
 FROM TABLE(dbms_xplan.display);
 
 Plan hash value: 4078350998
- 
+
 ----------------------------------------------------------------------------------------
 | Id  | Operation                   | Name     | Rows  | Bytes | Cost (%CPU)| Time     |
 ----------------------------------------------------------------------------------------
@@ -221,6 +221,7 @@ ALTER TABLE emp DROP CONSTRAINT pk_emp_p;
 CREATE [UNIQUE] INDEX 인덱스명 ON 테이블 (인덱스로 구성할 컬럼);
 
 CREATE INDEX idx_nu_emp_01 ON emp (empno);
+DROP INDEX idx_nu_emp_01;
 
 EXPLAIN PLAN FOR
 SELECT *
@@ -229,3 +230,18 @@ WHERE empno = 7698;
 
 SELECT *
 FROM TABLE(dbms_xplan.display);
+
+
+Plan hash value: 3956160932
+ 
+--------------------------------------------------------------------------
+| Id  | Operation         | Name | Rows  | Bytes | Cost (%CPU)| Time     |
+--------------------------------------------------------------------------
+|   0 | SELECT STATEMENT  |      |     1 |    36 |     3   (0)| 00:00:01 |
+|*  1 |  TABLE ACCESS FULL| EMP  |     1 |    36 |     3   (0)| 00:00:01 |
+--------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   1 - filter("EMPNO"=7698)

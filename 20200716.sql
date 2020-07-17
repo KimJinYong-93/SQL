@@ -15,11 +15,11 @@
 /* SELECT *
    FROM v$sql
    WHERE sql_text LIKE '%plan_test%';   system 계정에서 볼 수 있다.*/
-       
+
 SELECT /* plan_test(의미 없는 주석) */ *
 FROM emp
 WHERE empno = 7698;
-   
+
 select /* plan_test(의미 없는 주석) */ *
 FROM emp
 WHERE empno = 7698; --실행계획이 하나 늘어난다.
