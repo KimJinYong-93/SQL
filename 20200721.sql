@@ -131,10 +131,121 @@ FROM
  GROUP BY TO_CHAR(dt, 'MM'));
 
 MAX, MIN, SUM ==> MIN 이 성능 가장 좋음
+
 -----------------------------------------------------------------------------------------------
 
-[ 실습 calendar2 ]
+[ 과제 실습 calendar 0,2 ]
+
+SELECT 
+       MAX(DECODE(d, 1, dt, null)) sun, MAX(DECODE(d, 2, dt, null)) mon,
+       MAX(DECODE(d, 3, dt, null)) tue, MAX(DECODE(d, 4, dt, null)) wed,
+       MAX(DECODE(d, 5, dt, null)) thu, MAX(DECODE(d, 6, dt, null)) fri,
+       MAX(DECODE(d, 7, dt, null)) sat
+FROM
+(SELECT TO_DATE(:yyyymm, 'YYYYMM') + (level - 1) dt,
+       TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM') + (level - 1), 'D') d,
+       TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM') + (level - 1), 'IW') iw 
+FROM dual
+CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 'DD'))
+GROUP BY DECODE(d, 1, iw + 1, iw)
+ORDER BY DECODE(d, 1, iw + 1, iw);
+
+SELECT DECODE(d, 1, iw + 1, iw) ddd, --COUNT(iw) t,
+       MIN(DECODE(d, 1, dt)) sun, MIN(DECODE(d, 2, dt)) mon,
+       MIN(DECODE(d, 3, dt)) tue, MIN(DECODE(d, 4, dt)) wed,
+       MIN(DECODE(d, 5, dt)) thu, MIN(DECODE(d, 6, dt)) fri,
+       MIN(DECODE(d, 7, dt)) sat
+FROM
+(SELECT TO_DATE('201905', 'YYYYMM') + (level - 1) dt,
+       TO_CHAR(TO_DATE('201905', 'YYYYMM') + (level - 1), 'D') d,
+       TO_CHAR(TO_DATE('201905', 'YYYYMM') + (level - 1), 'IW') iw
+FROM dual
+CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE('201905', 'YYYYMM')), 'DD'))
+GROUP BY DECODE(d, 1, iw + 1, iw)
+ORDER BY DECODE(d, 1, iw + 1, iw);
+
+SELECT iw,
+       DECODE(d, 1, dt) sun, DECODE(d, 2, dt) mon,
+       DECODE(d, 3, dt) tue, DECODE(d, 4, dt) wed,
+       DECODE(d, 5, dt) thu, DECODE(d, 6, dt) fri,
+       DECODE(d, 7, dt) sat
+FROM
+(SELECT TO_DATE('201905', 'YYYYMM') + (level - 1) dt,
+       TO_CHAR(TO_DATE('201905', 'YYYYMM') + (level - 1), 'D') d,
+       TO_CHAR(TO_DATE('201905', 'YYYYMM') + (level - 1), 'IW') iw
+       
+FROM dual
+CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE('201905', 'YYYYMM')), 'DD'));
+
+iw 구하고, 해당 일자 구하고, 마지막 날짜 - 처음 날짜
+
+--------------------------------------------------------------------------------------------------------------------
+
+SELECT *
+FROM dual
+CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE('201905', 'YYYYMM')), 'IW');
+
+-----------------------------------------------------------------------------------------------------------
+
+SELECT MIN(DECODE(d, 1, dt)) sun, MIN(DECODE(d, 2, dt)) mon, MIN(DECODE(d, 3, dt)) tue,
+       MIN(DECODE(d, 4, dt)) wed, MIN(DECODE(d, 5, dt)) thu, MIN(DECODE(d, 6, dt)) fri,
+       MIN(DECODE(d, 7, dt)) sat
+FROM
+(SELECT NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1) + level - 1 dt, level,
+       TO_CHAR(NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1) + level - 1, 'IW') iw,
+       TO_CHAR(NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1) + level - 1, 'D') d
+FROM dual
+CONNECT BY LEVEL <= DECODE(TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 'D'), 7, LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 7))
+                    - DECODE(TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM'), 'D'), 1, TO_DATE(:yyyymm, 'YYYYMM'), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1)) + 1)
+GROUP BY DECODE(d, 1, iw + 1, iw)
+ORDER BY DECODE(d, 1, iw + 1, iw);
+
+NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1)
+-----------------------------------------------------------------------------------------------------------
+SELECT DECODE(TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 'D'), 7, LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')) , 7))
+FROM dual;
+
+SELECT TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM'), 'D')
+FROM dual;
 
 
+SELECT NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1) + level - 1 dt, level
+FROM dual
+CONNECT BY LEVEL <= DECODE(TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 'D'), 7, LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 7))
+                                                                                                                        - NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')), 1) + 1;
 
-과제 실습 calendar 0,2
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT MIN(DECODE(d, 1, dt)) sun, MIN(DECODE(d, 2, dt)) mon, MIN(DECODE(d, 3, dt)) tue,
+       MIN(DECODE(d, 4, dt)) wed, MIN(DECODE(d, 5, dt)) thu, MIN(DECODE(d, 6, dt)) fri,
+       MIN(DECODE(d, 7, dt)) sat
+FROM
+(SELECT DECODE(TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM'), 'D'), 1, TO_DATE(:yyyymm, 'YYYYMM'), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1)) + level - 1 dt, level,
+       TO_CHAR(DECODE(TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM'), 'D'), 1, TO_DATE(:yyyymm, 'YYYYMM'), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1)) + level - 1, 'IW') iw,
+       TO_CHAR(DECODE(TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM'), 'D'), 1, TO_DATE(:yyyymm, 'YYYYMM'), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1)) + level - 1, 'D') d
+FROM dual
+CONNECT BY LEVEL <= DECODE(TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 'D'), 7, LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm, 'YYYYMM')), 7))
+                    - DECODE(TO_CHAR(TO_DATE(:yyyymm, 'YYYYMM'), 'D'), 1, TO_DATE(:yyyymm, 'YYYYMM'), NEXT_DAY(LAST_DAY(TO_DATE(:yyyymm-1, 'YYYYMM')) - 7, 1)) + 1)
+GROUP BY DECODE(d, 1, iw + 1, iw)
+ORDER BY sat;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT MIN(DECODE(d, 1, dt)) sun, MIN(DECODE(d, 2, dt)) mon,
+       MIN(DECODE(d, 3, dt)) tue, MIN(DECODE(d, 4, dt)) wed,
+       MIN(DECODE(d, 5, dt)) thu, MIN(DECODE(d, 6, dt)) fri,
+       MIN(DECODE(d, 7, dt)) sat
+FROM
+(SELECT  TO_DATE(:yyyymm, 'yyyymm') - (TO_CHAR(TO_DATE(:yyyymm, 'yyyymm'), 'D') - 1) + level - 1 dt,
+        TO_CHAR(TO_DATE(:yyyymm, 'yyyymm') - (TO_CHAR(TO_DATE(:yyyymm, 'yyyymm'), 'D') - 1) + level - 1, 'D') d,
+        TO_CHAR(TO_DATE(:yyyymm, 'yyyymm') - (TO_CHAR(TO_DATE(:yyyymm, 'yyyymm'), 'D') - 1) + level - 1, 'IW') iw
+FROM dual
+CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'yyyymm')), 'DD') + 7 - TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'yyyymm')), 'D') + TO_CHAR(TO_DATE(:yyyymm, 'yyyymm'), 'D') - 1)
+GROUP BY DECODE(d, 1, iw + 1, iw)
+ORDER BY sat;
+
+
+SELECT TO_CHAR(TO_DATE(:yyyymm, 'yyyymm') - (TO_CHAR(TO_DATE(:yyyymm, 'yyyymm'), 'D') - 1) + (level - 1), 'IW') iw
+FROM dual
+CONNECT BY LEVEL <= TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'yyyymm')), 'DD') + 7 - TO_CHAR(LAST_DAY(TO_DATE(:yyyymm, 'yyyymm')), 'D') + TO_CHAR(TO_DATE(:yyyymm, 'yyyymm'), 'D') - 1;
